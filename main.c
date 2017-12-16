@@ -12,11 +12,13 @@ int main(int ac, char **av)
 
     i = 0;
     if (ac >= 2)
-        while (i++ <= ac)
+    dprintf(1, "ac=%d\n",ac);
+        while (++i < ac)
         {
-            fd = open(av[1], O_RDONLY);
+            fd = open(av[i], O_RDONLY);
+            dprintf(1,"fd=%d\n",fd );
             if (get_next_line(fd,line))
-                printf("%d\n",1 );
+                dprintf(1,"get next line a \"reussi\" %d\n",i);
         }
     return 0;
 }
