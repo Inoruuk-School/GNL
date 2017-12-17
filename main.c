@@ -17,7 +17,7 @@ int main(int ac, char **av)
         {
             fd = open(av[i], O_RDONLY);
             dprintf(1,"fd=%d\n",fd );
-            if (get_next_line(fd,line))
+            if (get_next_line(fd,line) == 1)
                 dprintf(1,"get next line a \"reussi\" %d\n",i);
         }
     return 0;
