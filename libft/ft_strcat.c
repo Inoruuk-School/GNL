@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   get_next_line.h                                  .::    .:/ .      .::   */
+/*   ft_strcat.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
+/*   By: asiaux <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/12/17 04:39:11 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/17 05:19:58 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Created: 2017/11/23 02:23:31 by asiaux       #+#   ##    ##    #+#       */
+/*   Updated: 2017/11/23 02:23:32 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
-
-# define BUFF_SIZE 32
-# include "libft/libft.h"
-# include <unistd.h>
-# include <stdlib.h>
-
-typedef struct			s_gnl
+char		*ft_strcat(char *s1, const char *s2)
 {
-	int					fd;
-	t_list				*lst;
-	struct s_gnl		*nextgnl;
-}						t_gnl;
+	int i;
+	int j;
 
-int						get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	j = -1;
+	while (s1[i] != '\0')
+		i++;
+	while (s2[++j] != '\0')
+		s1[i + j] = s2[j];
+	s1[i + j] = '\0';
+	return (s1);
+}

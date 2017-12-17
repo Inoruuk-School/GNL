@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   get_next_line.h                                  .::    .:/ .      .::   */
+/*   ft_putnbr.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
+/*   By: asiaux <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/12/17 04:39:11 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/17 05:19:58 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Created: 2017/11/23 02:23:01 by asiaux       #+#   ##    ##    #+#       */
+/*   Updated: 2017/11/23 02:23:02 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# define BUFF_SIZE 32
-# include "libft/libft.h"
-# include <unistd.h>
-# include <stdlib.h>
-
-typedef struct			s_gnl
+void		ft_putnbr(int n)
 {
-	int					fd;
-	t_list				*lst;
-	struct s_gnl		*nextgnl;
-}						t_gnl;
-
-int						get_next_line(const int fd, char **line);
-
-#endif
+	if (n == -2147483648)
+	{
+		ft_putstr("-2147483648");
+		return ;
+	}
+	if (n < 0)
+	{
+		ft_putchar('-');
+		n = -n;
+	}
+	if (n < 10)
+		ft_putchar(n % 10 + '0');
+	else
+	{
+		ft_putnbr(n / 10);
+		ft_putchar(n % 10 + '0');
+	}
+}

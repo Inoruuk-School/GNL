@@ -1,38 +1,56 @@
+/* ************************************************************************** */
+/*                                                          LE - /            */
+/*                                                              /             */
+/*   get_next_line.c                                  .::    .:/ .      .::   */
+/*                                                 +:+:+   +:    +:  +:+:+    */
+/*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
+/*                                                 #+#   #+    #+    #+#      */
+/*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
+/*   Updated: 2017/12/17 05:22:12 by asiaux      ###    #+. /#+    ###.fr     */
+/*                                                         /                  */
+/*                                                        /                   */
+/* ************************************************************************** */
+
 #include "get_next_line.h"
-#include "../libft/libft.h"
-#include "stdlib.h"
-#include <string.h>
-#include <stdio.h>
 
-char        **ft_realloc_2tab(char **str, const unsigned int size)
+t_gnl			*ft_gnlnew(int fd, t_list *lst)
 {
-    char    **tmp;
-    int     i;
+	t_gnl	*gnl;
 
-    if (!size)
-        str = (char **)malloc(sizeof(char *));
-    else if (size >= 1)
-    {
-        i = 0;
-        if(!(tmp = (char **)malloc(sizeof(char *) * size)))
-            return (0);
-        while (*str[i])
-        {
-            dprintf(1,"i=%d\n",i);
-            tmp[i] = ft_strcpy(tmp[i], str[i]);
-            i++;
-        }
-        free (str);
-    }
-    return (tmp);
+	gnl->fd = fd;
+	gnl->lst = ft_lstnew(lst->content, lst->content_size);
+	return (gnl);
 }
 
-int         get_next_line(const int fd, char **line)
+t_list			*ft_filllst(int fd)
 {
-    static char         **str;
+	int		ret;
+	char	*buff;
+	t_list	*lst;
+	t_list	*tmp;
 
-    if (fd < 0 || !line || BUFF_SIZE <= 0)
-        return (-1);
-    str = ft_realloc_2tab(str,(unsigned int)(fd - 3));
-    return (1);
+	if ((ret = read(fd, buff, BUFF_SIZE)) > 0)
+	{
+		lst = ft_lstnew(buff, ret);
+		tmp = lst;
+		while ((ret = read(fd, buff, BUFF_SIZE)) > 0)
+			tmp->next = ft_lstnew(buff, ret);
+	}
+	return (lst);
+}
+
+int				get_next_line(const int fd, char **line)
+{
+	static t_gnl		*gnl;
+	t_list				*lst;
+	char				*buff;
+	int					ret;
+
+	if (fd < 0 || !line || BUFF_SIZE <= 0)
+		return (-1);
+	if (!gnl)
+		gnl = ft_gnlnew(fd, ft_filllst(fd));
+	if (gnl->fd != fd)
+		gnl->nextgnl = ft_gnlnew(fd, ft_filllst(fd));
+	return (1);
 }

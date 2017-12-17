@@ -1,31 +1,36 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   get_next_line.h                                  .::    .:/ .      .::   */
+/*   ft_strmap.c                                      .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
+/*   By: asiaux <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/12/17 04:39:11 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/17 05:19:58 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Created: 2017/11/23 02:25:58 by asiaux       #+#   ##    ##    #+#       */
+/*   Updated: 2017/11/23 02:25:59 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# define BUFF_SIZE 32
-# include "libft/libft.h"
-# include <unistd.h>
-# include <stdlib.h>
-
-typedef struct			s_gnl
+char		*ft_strmap(char const *s, char (*f)(char))
 {
-	int					fd;
-	t_list				*lst;
-	struct s_gnl		*nextgnl;
-}						t_gnl;
+	int		i;
+	char	*str;
 
-int						get_next_line(const int fd, char **line);
-
-#endif
+	i = 0;
+	if (!s || !f)
+		return (NULL);
+	if (!(str = (char *)malloc(ft_strlen(s) + 1)))
+		return (NULL);
+	if (s && f)
+	{
+		while (s[i] != '\0')
+		{
+			str[i] = f(s[i]);
+			i++;
+		}
+		str[i] = '\0';
+	}
+	return (str);
+}

@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                          LE - /            */
 /*                                                              /             */
-/*   get_next_line.h                                  .::    .:/ .      .::   */
+/*   ft_strncat.c                                     .::    .:/ .      .::   */
 /*                                                 +:+:+   +:    +:  +:+:+    */
-/*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
+/*   By: asiaux <marvin@le-101.fr>                  +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
-/*   Created: 2017/12/17 04:39:11 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/17 05:19:58 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Created: 2017/11/23 02:26:16 by asiaux       #+#   ##    ##    #+#       */
+/*   Updated: 2017/11/23 02:26:18 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#include "libft.h"
 
-# define BUFF_SIZE 32
-# include "libft/libft.h"
-# include <unistd.h>
-# include <stdlib.h>
-
-typedef struct			s_gnl
+char	*ft_strncat(char *s1, const char *s2, size_t n)
 {
-	int					fd;
-	t_list				*lst;
-	struct s_gnl		*nextgnl;
-}						t_gnl;
+	char	*s;
 
-int						get_next_line(const int fd, char **line);
-
-#endif
+	s = s1;
+	while (*s1)
+		s1++;
+	while (*s2 && n--)
+		*s1++ = *s2++;
+	*s1 = '\0';
+	return (s);
+}
