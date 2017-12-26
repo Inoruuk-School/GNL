@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/26 20:05:37 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/26 20:08:56 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -36,7 +36,7 @@ static t_list			*ft_fill_lst(const int fd)
 	while ((ret = read(fd, buff, BUFF_SIZE)))
 	{
 		buff[ret] = '\0';
-		lst = ft_seek_n_fill(*tmp, buff, ret);
+		lst = ft_seek_n_fill(&tmp, buff, ret);
 		while (lst->next)
 			dprintf(1,"content :%s\n",tmp->content);
 	}
@@ -50,7 +50,7 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
 	char	*str;
 	int 	size;
 
-	tmplst = lst;
+	tmplst = *lst;
 	if (tmplst->content != 0) /*Si content contien deja un bout de ligne*/
 		if((tmpbuff = ft_strchr(buff, '\n')) != NULL && *buff)
 		{
@@ -73,11 +73,11 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
 	}
 	if (*buff)/*Si buff contient encore des lettres mais qu'il n y q pas de \n*/
 		{
-			tmplst =ft_lstnew(ft_strsub(buff, 0, BUFF_SIZE), ft_strlen(buff));
+			tmplst =ft_lstnew(ft_strsub(buff, 0, ret), ft_strlen(buff));
 //			dprintf(1,"content :%s\n",tmplst->content );
 		}
 //	dprintf(1,"lstcontent :%s\n",lst->content);
-	return (lst);
+	return (*lst);
 }
 
 int						get_next_line(const int fd, char **line)
