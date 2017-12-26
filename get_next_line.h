@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:39:11 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/26 19:27:47 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/26 20:01:39 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -27,6 +27,6 @@ typedef struct			s_gnl
 }						t_gnl;
 
 int						get_next_line(const int fd, char **line);
-t_list					*ft_seek_n_fill(t_list *lst, char *buff, const int ret);
+t_list					*ft_seek_n_fill(t_list &*lst, char *buff, const int ret);
 
 #endif

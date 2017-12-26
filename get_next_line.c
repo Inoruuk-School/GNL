@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/26 19:43:24 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/26 20:02:19 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -28,19 +28,22 @@ static t_list			*ft_fill_lst(const int fd)
 	int		ret;
 	char	buff[BUFF_SIZE + 1];
 	t_list	*lst;
-//	t_list	*tmp;
+	t_list	*tmp;
 	int i=0;
 
 	lst = ft_lstnew(0, 0);
+	tmp = lst;
 	while ((ret = read(fd, buff, BUFF_SIZE)))
 	{
 		buff[ret] = '\0';
-		lst = ft_seek_n_fill(lst, buff, ret);
+		lst = ft_seek_n_fill(*tmp, buff, ret);
+		while (lst->next)
+			dprintf(1,"content :%s\n",tmp->content);
 	}
 	return (lst);
 }
 
-t_list			*ft_seek_n_fill(t_list *lst, char *buff, const int ret)
+t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
 {
 	t_list	*tmplst;
 	char	*tmpbuff;
@@ -70,9 +73,10 @@ t_list			*ft_seek_n_fill(t_list *lst, char *buff, const int ret)
 	}
 	if (*buff)/*Si buff contient encore des lettres mais qu'il n y q pas de \n*/
 		{
-			tmplst =ft_lstnew(ft_strsub(buff, 0, ret), ft_strlen(buff));
+			tmplst =ft_lstnew(ft_strsub(buff, 0, BUFF_SIZE), ft_strlen(buff));
 //			dprintf(1,"content :%s\n",tmplst->content );
 		}
+//	dprintf(1,"lstcontent :%s\n",lst->content);
 	return (lst);
 }
 
