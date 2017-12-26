@@ -3,22 +3,41 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-int main(int ac, char **av)
+int	main(int argc, char **argv)
 {
-    int i;
-    int fd;
-    char **line;
+	int		fd;
+	int		ret;
+	char	*line;
+	int		i;
 
-    i = 0;
-    if (ac >= 2)
-    dprintf(1, "ac=%d\n",ac);
-        while (++i < ac)
-        {
-            fd = open(av[i], O_RDONLY);
-            dprintf(1,"fd=%d\n",fd );
-            if (get_next_line(fd,line) == 1)
-                dprintf(1,"get next line a \"reussi\" %d\n",i);
-        }
-    return 0;
+	if (argc == 2)
+	{
+		if ((fd = open(argv[1], O_RDONLY)) == -1)
+			return (1);
+		ret = 1;
+		i = 0;
+		while ((ret = get_next_line(fd, &line)) > 0)
+		{
+			printf("palier4\n");
+			ft_putstr(line);
+			ft_putstr("\n");
+			ft_strdel(&line);
+		}
+	}
+	if (argc == 1)
+	{
+		fd = 1;
+		ret = 1;
+		i = 0;
+		while ((ret = get_next_line(fd, &line)) > 0)
+		{
+			ft_putstr(line);
+			ft_putstr("\n");
+			ft_strdel(&line);
+		}
+	}
+	return (0);
 }
