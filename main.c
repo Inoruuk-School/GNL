@@ -21,7 +21,7 @@ int	main(int argc, char **argv)
 		i = 0;
 		while ((ret = get_next_line(fd, &line)) > 0)
 		{
-			printf("palier4\n");
+			printf("line renvoyer : \n");
 			ft_putstr(line);
 			ft_putstr("\n");
 			ft_strdel(&line);
