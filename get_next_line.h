@@ -4,7 +4,16 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
+#include "../libft/libft.h"
+#include "stdlib.h"
 
-int         get_next_line(const int fd, char **line);
+typedef struct	s_gnl
+{
+	int					fd;
+	char				*str;
+	struct s_gnl		*next;
+}				t_gnl;
+
+int 	        get_next_line(const int fd, char **line);
 
 #endif

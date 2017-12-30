@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/17 04:17:12 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/29 19:54:48 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -15,50 +15,49 @@
 #include "../libft/libft.h"
 #include "stdlib.h"
 
-
-static char        **ft_alloc_n_realloc(char **str, const unsigned int size)
+static char			*ft_the_line(int fd, t_gnl *gnl)
 {
-    char    **tmp;
-    int     i;
+	char	*str;
+	char 	*buff;
+	char 	*tmp;
+	int 	ret;
 
-    if (!size)
-    {
-        str = (char **)malloc(sizeof(char *));
-        *str = ft_strnew(BUFF_SIZE);
-    }
-    else if (size >= 1)
-    {
-        i = 0;
-        if(!(tmp = (char **)malloc(sizeof(char *) * size)))
-            return (0);
-        while (str[i])
-        {
-            tmp[i] = ft_strcpy(tmp[i], str[i]);
-            i++;
-        }
-        free (str);
-    }
-    return (tmp);
+	str = ft_strnew(0);
+	while ((ret = read(fd, buff, BUFF_SIZE)))
+	{
+		if ((tmp = ft_strchr(buff, '\n')))
+			{
+				str = ft_strcat(str, ft_strsub(buff, 0 ,tmp - buff);
+			}
+	}
+	return (str);
 }
 
-int         get_next_line(const int fd, char **line)
+static t_gnl	ft_gnlnew(int fd, char *str)
 {
-    static char         **str;
+	t_gnl	*gnl;
+
+	if (!(gnl = (t_gnl *)malloc(sizeof(t_gnl))))
+		return (NULL);
+	gnl->fd = fd;
+	gnl->str = str;
+	return (gnl);
+}
+
+int				get_next_line(const int fd, char **line)
+{
+    static t_gnl        *gnl = NULL;
     char                *tmp;
     char                *buff;
     int                 ret;
 
-   if (fd < 0 || !line || BUFF_SIZE <= 0)
-        return (-1);
-    if (!*(line + fd - 3))
-        str = ft_alloc_n_realloc(str,(unsigned int)(fd - 3));
+	if (fd < 0 || !line || BUFF_SIZE <= 0 || read(fd, buff, 0) == -1)
+ 		return (-1);
+ 	if (!gnl) /*[1]creation premiere liste*/
+ 		gnl = ft_gnlnew(fd, ft_fill_lst(fd));
     if ((ret = read(fd, buff, BUFF_SIZE) == BUFF_SIZE))
     {
-        tmp = ft_strchr(buff, '\n');
-        if (*tmp)
-            {
-                *(line + fd - 3) = ft_strncpy(*(line + fd - 3), buff, &tmp - &*(line + fd - 3));
-            }
+
     }
     return (1);
 }
