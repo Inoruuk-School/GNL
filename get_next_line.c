@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/29 19:19:20 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2017/12/30 18:23:25 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -38,7 +38,10 @@ static t_list			*ft_fill_lst(const int fd)
 	while ((ret = read(fd, buff, BUFF_SIZE)))
 	{
 		buff[ret] = '\0';
-		lst = ft_seek_n_fill(&lst, buff, ret);
+		if (*buff == '\n' && lst->next)
+			lst = ft_seek_n_fill(&lst->next, buff + 1, ret);
+		else
+			lst = ft_seek_n_fill(&lst, buff, ret);
 	}
 	lst = head;
 	while (lst)
@@ -65,16 +68,15 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
 			(*lst)->next = ft_lstnew(str, ft_strlen(str));
 			*lst = (*lst)->next;
 		}
-		else
-		{
-			(*lst)->next = ft_lstnew(ft_strsub(buff, 0, size), size);
+		else if (((*lst)->next = ft_lstnew(ft_strsub(buff, 0, size), size)))
 			*lst = (*lst)->next;
-		}
 		buff += size + 1;
 		size = (tmpbuff = ft_strchr(buff, '\n')) ? tmpbuff - buff : 0;
 	}
 	if (*buff && !size)
 	{
+		while (*buff == '\n')
+			buff++;
 		if ((*lst)->next && (str = ft_strsub(buff, 0, ret)))
 		{
 			str = ft_strcat((char *)(*lst)->next->content, str);
