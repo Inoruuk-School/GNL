@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2017/12/30 18:23:25 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/03 17:34:49 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -39,24 +39,26 @@ static t_list			*ft_fill_lst(const int fd)
 	{
 		buff[ret] = '\0';
 		if (*buff == '\n' && lst->next)
-			lst = ft_seek_n_fill(&lst->next, buff + 1, ret);
+			lst = ft_seek_n_fill(&lst->next, buff + 1, ret, 0);
 		else
-			lst = ft_seek_n_fill(&lst, buff, ret);
+			lst = ft_seek_n_fill(&lst, buff, ret, 0);
 	}
+	tmp = head->next;
+	free(head);
+	head = tmp;
 	lst = head;
-	while (lst)
+/*	while (lst)
 	{
 		dprintf(1,"ligne: %s\n",lst->content);
 		lst = lst->next;
-	}
+	}*/
 	return (head);
 }
 
-t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
+t_list			*ft_seek_n_fill(t_list **lst, char *buff, int ret, int size)
 {
 	char	*tmpbuff;
 	char	*str;
-	int 	size;
 
 	size = (tmpbuff = ft_strchr(buff, '\n')) ? tmpbuff - buff : 0;
 	while (size)
@@ -64,13 +66,15 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
 		if((*lst) && (*lst)->next && (str = ft_strsub(buff, 0, size)))
 		{
 			str = ft_strcat((char *)(*lst)->next->content, str);
-//			free(lst->next->content);
+			free((*lst)->next);
 			(*lst)->next = ft_lstnew(str, ft_strlen(str));
 			*lst = (*lst)->next;
 		}
 		else if (((*lst)->next = ft_lstnew(ft_strsub(buff, 0, size), size)))
 			*lst = (*lst)->next;
 		buff += size + 1;
+		while(*buff == '\n')
+			buff++;
 		size = (tmpbuff = ft_strchr(buff, '\n')) ? tmpbuff - buff : 0;
 	}
 	if (*buff && !size)
@@ -80,7 +84,7 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
 		if ((*lst)->next && (str = ft_strsub(buff, 0, ret)))
 		{
 			str = ft_strcat((char *)(*lst)->next->content, str);
-//			free(lst->next->content);
+			free((*lst)->next);
 			(*lst)->next = ft_lstnew(str, ft_strlen(str));
 		}
 		else
@@ -155,16 +159,17 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, const int ret)
 
 int						get_next_line(const int fd, char **line)
 {
-	static t_gnl		*gnl = NULL;
+	static t_gnl		*head = NULL;
 	t_gnl				*tmp;
-	char buff[BUFF_SIZE + 1];
-	int ret;
+	t_list				*lsttmp;
+	char 				buff[BUFF_SIZE + 1];
 
 	if (fd < 0 || !line || BUFF_SIZE <= 0 || read(fd, buff, 0) == -1)
 		return (-1);
-	if (!gnl) /*[1]creation premiere liste*/
-		gnl = ft_gnlnew(fd, ft_fill_lst(fd));
-	if (gnl->fd != fd) /*[2]recherche fd et si non trouver creation next liste*/
+	if (!head) /*[1]creation premiere liste*/
+		head = ft_gnlnew(fd, ft_fill_lst(fd));
+	tmp = head;
+	if (tmp->fd != fd) /*[2]recherche fd et si non trouver creation next liste*/
 	{
 		while (tmp->nextgnl && tmp->fd != fd)
 			tmp = tmp->nextgnl;
@@ -174,6 +179,13 @@ int						get_next_line(const int fd, char **line)
 			tmp = tmp->nextgnl;
 		}
 	}
-	*line = tmp->lst->content;
-	return (1);
+	if (tmp->lst && (*line = ft_strdup(tmp->lst->content)))
+	{
+//		dprintf(1,"lst->content: %s\n",tmp->lst->content);
+		lsttmp = tmp->lst->next;
+		free(tmp->lst);
+		tmp->lst = lsttmp;
+		return (1);
+	}
+	return (-1);
 }

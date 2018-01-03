@@ -21,11 +21,10 @@ int	main(int argc, char **argv)
 		i = 0;
 		while ((ret = get_next_line(fd, &line)) > 0)
 		{
-			printf("line renvoyer : \n");
-			ft_putstr(line);
-			ft_putstr("\n");
+			dprintf(1,"line renvoyer : %s\n",line );
 			ft_strdel(&line);
 		}
+//		printf("tototo333333333332 \n");
 	}
 	if (argc == 1)
 	{
