@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:39:11 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/03 17:35:07 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/03 18:34:35 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -14,7 +14,7 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-# define BUFF_SIZE 1000001
+# define BUFF_SIZE 100
 # include "libft/libft.h"
 # include <unistd.h>
 # include <stdlib.h>

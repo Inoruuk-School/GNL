@@ -6,7 +6,7 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/03 17:34:49 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/03 18:43:21 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
@@ -47,7 +47,7 @@ static t_list			*ft_fill_lst(const int fd)
 	free(head);
 	head = tmp;
 	lst = head;
-/*	while (lst)
+	/*while (lst)
 	{
 		dprintf(1,"ligne: %s\n",lst->content);
 		lst = lst->next;
@@ -181,9 +181,9 @@ int						get_next_line(const int fd, char **line)
 	}
 	if (tmp->lst && (*line = ft_strdup(tmp->lst->content)))
 	{
-//		dprintf(1,"lst->content: %s\n",tmp->lst->content);
 		lsttmp = tmp->lst->next;
 		free(tmp->lst);
+		tmp->lst = NULL;
 		tmp->lst = lsttmp;
 		return (1);
 	}
