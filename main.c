@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-/*int	main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int		fd;
 	int		ret;
@@ -24,7 +24,6 @@
 			dprintf(1,"line renvoyer : %s\n",line );
 			ft_strdel(&line);
 		}
-//		printf("tototo333333333332 \n");
 	}
 	if (argc == 1)
 	{
@@ -39,9 +38,9 @@
 		}
 	}
 	return (0);
-}*/
+}
 
-
+/*
 int		main(int argc, char **argv)
 {
 	int		fd;
@@ -60,4 +59,4 @@ int		main(int argc, char **argv)
 	}
 	if (argc == 2)
 		close(fd);
-}
+}*/

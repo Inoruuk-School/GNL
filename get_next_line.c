@@ -6,13 +6,31 @@
 /*   By: asiaux <asiaux@student.le-101.fr>          +:+   +:    +:    +:+     */
 /*                                                 #+#   #+    #+    #+#      */
 /*   Created: 2017/12/17 04:15:35 by asiaux       #+#   ##    ##    #+#       */
-/*   Updated: 2018/01/03 18:43:21 by asiaux      ###    #+. /#+    ###.fr     */
+/*   Updated: 2018/01/09 14:22:54 by asiaux      ###    #+. /#+    ###.fr     */
 /*                                                         /                  */
 /*                                                        /                   */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
+static t_list			*ft_mod(t_list *lst, char *str)
+{
+	t_list	*lsttmp;
+	str = ft_strcat((char *)lst->content, str);
+	lsttmp = ft_lstnew(str, ft_strlen(str));
+	free(lst->content);
+	lst->content = NULL;
+	lst->content_size = 0;
+	free (lst);
+	return (lsttmp);
+}
+
+static void 			ft_del(void *content, size_t c_size)
+{
+	free(content);
+	content = NULL;
+	c_size = 0;
+}
 
 static t_gnl			*ft_gnlnew(int fd, t_list *lst)
 {
@@ -22,7 +40,12 @@ static t_gnl			*ft_gnlnew(int fd, t_list *lst)
 		return (NULL);
 	gnl->fd = fd;
 	gnl->lst = lst;
-	return (gnl);
+/*	while (gnl->lst)
+	{
+		dprintf(1,"gnl ligne: %s\n",gnl->lst->content);
+		gnl->lst = gnl->lst->next;
+	}
+*/	return (gnl);
 }
 
 static t_list			*ft_fill_lst(const int fd)
@@ -47,11 +70,6 @@ static t_list			*ft_fill_lst(const int fd)
 	free(head);
 	head = tmp;
 	lst = head;
-	/*while (lst)
-	{
-		dprintf(1,"ligne: %s\n",lst->content);
-		lst = lst->next;
-	}*/
 	return (head);
 }
 
@@ -60,14 +78,18 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, int ret, int size)
 	char	*tmpbuff;
 	char	*str;
 
+	while (*buff == '\n')
+		buff++;
 	size = (tmpbuff = ft_strchr(buff, '\n')) ? tmpbuff - buff : 0;
 	while (size)
 	{
 		if((*lst) && (*lst)->next && (str = ft_strsub(buff, 0, size)))
 		{
-			str = ft_strcat((char *)(*lst)->next->content, str);
-			free((*lst)->next);
-			(*lst)->next = ft_lstnew(str, ft_strlen(str));
+//			str = ft_strcat((char *)(*lst)->next->content, str);
+//			free((*lst)->next);
+//			ft_lstdelone(&(*lst)->next,ft_del);
+//			(*lst)->next = ft_lstnew(str, ft_strlen(str));
+			(*lst)->next = ft_mod((*lst)->next, str);
 			*lst = (*lst)->next;
 		}
 		else if (((*lst)->next = ft_lstnew(ft_strsub(buff, 0, size), size)))
@@ -79,82 +101,18 @@ t_list			*ft_seek_n_fill(t_list **lst, char *buff, int ret, int size)
 	}
 	if (*buff && !size)
 	{
-		while (*buff == '\n')
-			buff++;
 		if ((*lst)->next && (str = ft_strsub(buff, 0, ret)))
 		{
-			str = ft_strcat((char *)(*lst)->next->content, str);
-			free((*lst)->next);
-			(*lst)->next = ft_lstnew(str, ft_strlen(str));
+//			str = ft_strcat((char *)(*lst)->next->content, str);
+//			free((*lst)->next);
+//			ft_lstdelone(&(*lst)->next, ft_del);
+//			(*lst)->next = ft_lstnew(str, ft_strlen(str));
+			(*lst)->next = ft_mod((*lst)->next, str);
 		}
-		else
+		else if (!(*lst)->next)
 			(*lst)->next = ft_lstnew(ft_strsub(buff, 0, ret), ft_strlen(buff));
 	}
-
-
-
-
-//	if ((*lst)->next) /*cas ou il y a du reste de buff*/
-//	{
-//		if(size && ((*lst) = (*lst)->next) && (str = ft_strsub(buff, 0, size)))
-//			{/*je rentre dans le reste pour le modifier*/
-//				str = ft_strcat((char *)(*lst)->content, str);
-//				*lst = ft_lstnew(str, ft_strlen(str));
-//				buff += 1 + size;
-//			}/*le reste est maintenant une ligne complete*/
-//		else if (!size && ((*lst = (*lst)->next)))
-//			{/*si !size alors il n y a pas de \n donc la ligne n est pas terminer*/
-//				str = ft_strcat((char *)(*lst)->content, buff);
-//				*lst = ft_lstnew(str, ft_strlen(str));
-//			}/*alors je rentre buff dans lst->content*/
-//	}
-//	while (size)
-//	{
-//		(*lst)->next = ft_lstnew(buff, ret);
-//		*lst = (*lst)->next;
-//		size = (tmpbuff = ft_strchr(buff, '\n')) ? tmpbuff - buff : 0;
-//		buff += 1 + size;
-//	}
-
-
-
-
-
-
-//	else if (size)/* pas de reste donc creer lst->next et remplir*/
-/*		{
-			(*lst)->next = ft_lstnew(buff, ret);
-		}*/
-/*
-	if ((*lst)->content != 0)
-	if((tmpbuff = ft_strchr(buff, '\n')) != NULL && *buff)
-		{
-			size = tmpbuff - buff;
-			str = ft_strcat((*lst)->content, ft_strsub(buff, 0, size));
-			*lst = ft_lstnew(str, ft_strlen(str));
-			buff = tmpbuff + 1;
-		}
-	while ((tmpbuff = ft_strchr(buff, '\n')) != NULL && *buff)
-	{
-		size = tmpbuff - buff;
-		if ((*lst)->content)
-			{
-				str = ft_strcat((*lst)->content, ft_strsub(buff, 0, size));
-				*lst = ft_lstnew(str, ft_strlen(str));
-			}
-		else
-			(*lst)->next = ft_lstnew(ft_strsub(buff, 0, size), size);
-		buff = tmpbuff + 1;
-		*lst = (*lst)->next ? (*lst)->next : *lst;
-	}
-	if (*buff && (*lst)->content)
-	{
-		size = ft_strlen(buff) + (*lst)->content_size;
-		(*lst) = ft_lstnew(ft_strcat((*lst)->content, buff), size);
-	}
-	else if (*buff)
-		(*lst)->next =ft_lstnew(ft_strsub(buff, 0, ret), ft_strlen(buff));
-*/	return (*lst);
+	return (*lst);
 }
 
 int						get_next_line(const int fd, char **line)
@@ -168,24 +126,23 @@ int						get_next_line(const int fd, char **line)
 		return (-1);
 	if (!head) /*[1]creation premiere liste*/
 		head = ft_gnlnew(fd, ft_fill_lst(fd));
-	tmp = head;
-	if (tmp->fd != fd) /*[2]recherche fd et si non trouver creation next liste*/
+	if ((tmp = head) &&tmp->fd != fd) /*[2]recherche fd et si non trouver creation next liste*/
 	{
 		while (tmp->nextgnl && tmp->fd != fd)
 			tmp = tmp->nextgnl;
 		if (tmp->fd != fd && !tmp->nextgnl)
-		{
 			tmp->nextgnl = ft_gnlnew(fd, ft_fill_lst(fd));
+		if(tmp->nextgnl)
 			tmp = tmp->nextgnl;
-		}
 	}
 	if (tmp->lst && (*line = ft_strdup(tmp->lst->content)))
 	{
+		*(*line + tmp->lst->content_size) = '\0';
 		lsttmp = tmp->lst->next;
-		free(tmp->lst);
-		tmp->lst = NULL;
+//		free(tmp->lst);
+		ft_lstdelone(&tmp->lst, ft_del);
 		tmp->lst = lsttmp;
 		return (1);
 	}
-	return (-1);
+	return (0);
 }
